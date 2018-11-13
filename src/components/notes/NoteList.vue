@@ -1,10 +1,19 @@
 <template>
-  <div>
+  <v-container grid-list-md text-xs-center>
+
     <router-link to="/saveForm">Add note</router-link>
-    <note-row v-model="notes" v-for="note in getNotes" :key="note.id"
-              :note="note"
-    />
-  </div>
+
+    <v-layout row wrap>
+
+      <v-flex v-for="note in getNotes" :key="note.id" >
+
+        <note-row :note="note"/>
+
+
+      </v-flex>
+    </v-layout>
+
+  </v-container>
 </template>
 
 <script>
@@ -14,15 +23,10 @@
 
   export default {
     components: {NoteRow},
-    data(){
-      return{
-        notes:[{id:1}]
-      }
-    },
-    computed:{
+    computed: {
       ...mapGetters(['getNotes'])
     },
-    created(){
+    created() {
       this.$store.dispatch('fetchNotes')
     }
   }

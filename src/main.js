@@ -3,6 +3,8 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
 
 import store from './store'
 
@@ -29,6 +31,7 @@ axios.interceptors.response.use(response => {
 );
 
 Vue.use(VueAxios, axios);
+Vue.use(Vuetify);
 
 new Vue({
   el: '#app',

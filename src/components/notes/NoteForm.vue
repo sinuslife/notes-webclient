@@ -13,6 +13,7 @@
     data() {
       return {
         note: {
+          id: '',
           title: '',
           text: ''
         }
@@ -23,6 +24,11 @@
         this.$store.dispatch('saveNote', this.note);
         router.push({path: '/home'});
       }
+    },
+    mounted() {
+      this.note.id = this.$parent.note.id
+
+
     }
   }
 </script>
