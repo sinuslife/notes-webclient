@@ -61,9 +61,9 @@ const store = new Vuex.Store({
         commit('addNote', response.data)
       })
     },
-    editNote({state, commit}, note) {
+    editNote({commit}, note) {
       Vue.axios.put(`/api/users/note/${note.id}`, note).then(response => {
-        const index = getIndex(state.getters.getNotes(), note.id);
+        const index = getIndex(store.getters.getNotes, note.id);
         commit('replaceNote', index, 1, response.data)
       })
     },
