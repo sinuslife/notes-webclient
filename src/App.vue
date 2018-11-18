@@ -1,13 +1,8 @@
 <template>
 
   <v-app>
-    <!--<v-navigation-drawer>-->
-    <!---->
-    <!--</v-navigation-drawer>-->
-
 
     <v-toolbar app color="amber" absolute clipped-left>
-      <!--<v-toolbar-side-icon @click.native="drawer = !drawer"></v-toolbar-side-icon>-->
       <span class="title ml-3 mr-5">Booble&nbsp;<span class="font-weight-light">Notes</span></span>
 
       <v-spacer></v-spacer>
@@ -25,16 +20,15 @@
 
     </v-toolbar>
     <v-content>
-      <!--<v-container fluid fill-height class="grey lighten-4">-->
-      <!--<v-layout justify-center align-center>-->
-      <!--<v-flex shrink>-->
 
-      <router-view/>
+      <v-layout justify-center align-center>
+        <v-flex shrink>
+
+          <router-view/>
 
 
-      <!--</v-flex>-->
-      <!--</v-layout>-->
-      <!--</v-container>-->
+        </v-flex>
+      </v-layout>
 
 
     </v-content>

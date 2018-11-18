@@ -19,11 +19,23 @@ function getIndex(list, id) {
 const store = new Vuex.Store({
   state: {
     notes: [],
-    logged: localStorage.getItem('token')
+    logged: localStorage.getItem('token'),
+    noteAttr: {
+      id: '',
+      title: '',
+      text: ''
+    },
+    dialog: false,
+    loading: false,
+    errored: false
   },
   getters: {
     getNotes: state => state.notes,
-    isLogged: state => state.logged
+    isLogged: state => state.logged,
+    noteAttr: state => state.noteAttr,
+    dialog: state => state.dialog,
+    loading: state => state.loading,
+    errored: state => state.errored
   },
   mutations: {
     set(state, {type, items}) {
@@ -51,24 +63,32 @@ const store = new Vuex.Store({
   },
   actions: {
     fetchNotes({commit}) {
-      Vue.axios.get('/api/users/note')
+      commit('set', {type: 'loading', items: true});
+      commit('set', {type: 'errored', items: false});
+      Vue.axios.get('/api/user/note')
         .then(response => {
           commit('saveNote', response.data)
         })
+        .catch(() => commit('set', {type: 'errored', items: true}))
+        .finally(() => commit('set', {type: 'loading', items: false}))
     },
-    saveNote({commit}, note) {
-      Vue.axios.post('/api/users/note', note).then(response => {
+    saveNote({commit, dispatch}, note) {
+      Vue.axios.post('/api/user/note', note).then(response => {
         commit('addNote', response.data)
+      }).then(() => {
+        dispatch('clearNoteAttr')
       })
     },
-    editNote({commit}, note) {
-      Vue.axios.put(`/api/users/note/${note.id}`, note).then(response => {
+    editNote({commit, dispatch}, note) {
+      Vue.axios.put(`/api/user/note/${note.id}`, note).then(response => {
         const index = getIndex(store.getters.getNotes, note.id);
         commit('replaceNote', index, 1, response.data)
+      }).then(() => {
+        dispatch('clearNoteAttr')
       })
     },
     deleteNote({commit}, note) {
-      Vue.axios.delete(`/api/users/note/${note.id}`).then(response => {
+      Vue.axios.delete(`/api/user/note/${note.id}`).then(response => {
         if (response.status === 200) {
           commit('deleteNote', note)
         }
@@ -92,10 +112,24 @@ const store = new Vuex.Store({
       localStorage.removeItem('token');
       commit('logout');
       router.push({path: '/login'})
+    },
+
+    showDialog({commit}, flag) {
+      commit('set', {type: 'dialog', items: flag})
+    },
+    pushNoteToAttr({commit}, note) {
+      commit('set', {type: 'noteAttr', items: note})
+    },
+    clearNoteAttr({commit}) {
+      let empty = {
+        id: '',
+        title: '',
+        text: ''
+      };
+      commit('set', {type: 'noteAttr', empty})
     }
-
-
   }
+
 });
 
 export default store

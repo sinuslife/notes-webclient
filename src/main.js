@@ -8,8 +8,6 @@ import 'vuetify/dist/vuetify.min.css'
 
 import store from './store'
 
-//Vue.config.productionTip = false
-
 axios.interceptors.request.use(config => {
   config.baseURL = 'http://localhost:9000';
 
@@ -18,6 +16,9 @@ axios.interceptors.request.use(config => {
   }
 
   return config;
+}, error => {
+  router.push({path: '/error'});
+  return Promise.reject(error);
 });
 
 axios.interceptors.response.use(response => {
@@ -27,6 +28,10 @@ axios.interceptors.response.use(response => {
       Vue.$store.dispatch('logout');
       router.push({path: '/login'})
     }
+  if (error.status === 404) {
+    router.push({path: '/error'})
+  }
+  return Promise.reject(error);
   }
 );
 
